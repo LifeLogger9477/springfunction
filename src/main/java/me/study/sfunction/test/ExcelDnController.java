@@ -1,7 +1,6 @@
 package me.study.sfunction.test;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -90,6 +89,16 @@ public class ExcelDnController {
       cell.setCellValue( headerArray[col] );
     }
 
+    //
+    CreationHelper helper = wb.getCreationHelper();
+
+    CellStyle cellDateStyle = wb.createCellStyle();
+    cellDateStyle.setDataFormat( helper.createDataFormat().getFormat( "yyyy-MM-dd" ) );
+    cellDateStyle.setBorderTop( BorderStyle.DASHED );
+    cellDateStyle.setBorderBottom( BorderStyle.DASHED );
+    cellDateStyle.setBorderLeft( BorderStyle.DASHED );
+    cellDateStyle.setBorderRight( BorderStyle.DASHED );
+
     // Body
     SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd" );
     LocalDate today = LocalDate.now();
@@ -109,13 +118,9 @@ public class ExcelDnController {
       cell.setCellValue( "title_" + i );
 
 
-      CellStyle cellDateStyle = wb.createCellStyle();
-      cellDateStyle.setDataFormat( HSSFDataFormat.getBuiltinFormat( "yyyy-MM-dd" ) );
-
       cell = row.createCell( 3 );
       today = today.plusDays( 1 );
       cell.setCellValue( today );
-      cell.setCellStyle( bodyStyle );
       cell.setCellStyle( cellDateStyle );
     }
 
