@@ -20,6 +20,8 @@ import java.util.Date;
 @Controller
 public class ExcelDnController {
 
+  private static short ratio = 20;
+
   @GetMapping (value = "/")
   public String home() {
 
@@ -39,7 +41,7 @@ public class ExcelDnController {
     // 테이블 헤더용
     CellStyle headerStyle = wb.createCellStyle();
 
-    // 가는 경계선
+    // 테두리
     headerStyle.setBorderTop( BorderStyle.THIN );
     headerStyle.setBorderBottom( BorderStyle.THIN );
     headerStyle.setBorderLeft( BorderStyle.THIN );
@@ -51,6 +53,21 @@ public class ExcelDnController {
     );
     headerStyle.setFillPattern( FillPatternType.SOLID_FOREGROUND );
 
+    // 정렬
+    headerStyle.setAlignment( HorizontalAlignment.CENTER );
+    headerStyle.setVerticalAlignment( VerticalAlignment.CENTER );
+
+    // font
+    Font headerFont = wb.createFont();
+    headerFont.setFontName( "나눔고딕" );
+    // 폰트 사이즈는 / 50이랑 같은데 다른 폰트에서도 그럴까?
+    headerFont.setFontHeight( (short) (ratio * 11) );
+    headerFont.setColor( IndexedColors.DARK_BLUE.getIndex() );
+    headerFont.setBold( true );
+
+    // font 적용
+    headerStyle.setFont( headerFont );
+    
     // 데이터용 경계선
     CellStyle bodyStyle = wb.createCellStyle();
     bodyStyle.setBorderTop( BorderStyle.DASHED );
@@ -61,6 +78,7 @@ public class ExcelDnController {
     // Header
     String[] headerArray = { "NO.", "제목", "내용", "등록일", "등록자", "사용여부" };
     row = sheet.createRow( numRow++ );
+    row.setHeight( (short) (ratio * 20) );
     for (int col = 0; col < headerArray.length; col++) {
 
       cell = row.createCell( col );
