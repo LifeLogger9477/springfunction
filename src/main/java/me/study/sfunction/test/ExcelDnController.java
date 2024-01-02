@@ -1,6 +1,7 @@
 package me.study.sfunction.test;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -68,8 +70,10 @@ public class ExcelDnController {
     // font 적용
     headerStyle.setFont( headerFont );
     
-    // 데이터용 경계선
+    // 데이터용
     CellStyle bodyStyle = wb.createCellStyle();
+
+    // 테두리
     bodyStyle.setBorderTop( BorderStyle.DASHED );
     bodyStyle.setBorderBottom( BorderStyle.DASHED );
     bodyStyle.setBorderLeft( BorderStyle.DASHED );
@@ -87,6 +91,8 @@ public class ExcelDnController {
     }
 
     // Body
+    SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd" );
+    LocalDate today = LocalDate.now();
     for (int i = 0; i < 3; i++) {
 
       row = sheet.createRow( numRow++ );
@@ -101,6 +107,16 @@ public class ExcelDnController {
       cell = row.createCell( 2 );
       cell.setCellStyle( bodyStyle );
       cell.setCellValue( "title_" + i );
+
+
+      CellStyle cellDateStyle = wb.createCellStyle();
+      cellDateStyle.setDataFormat( HSSFDataFormat.getBuiltinFormat( "yyyy-MM-dd" ) );
+
+      cell = row.createCell( 3 );
+      today = today.plusDays( 1 );
+      cell.setCellValue( today );
+      cell.setCellStyle( bodyStyle );
+      cell.setCellStyle( cellDateStyle );
     }
 
     // content type 과 파일명 지정
